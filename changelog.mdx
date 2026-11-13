@@ -1,0 +1,212 @@
+---
+title: Changelog
+description: Track recent Bridge updates, fixes, and improvements. This page highlights the latest changes so users can stay current with the product.
+---
+
+## Overview
+
+This changelog is a starter kit template for Bridge documentation. Use it to track releases, explain behavior changes, and call out upgrade notes in a way that is easy to scan.
+
+Keep entries short, factual, and dated. Focus on what changed, why it matters, and whether users need to take action.
+
+<Callout kind="tip">
+  Treat each release note as a reusable template. Replace the sample details with your real version history, then keep the same structure for future updates.
+</Callout>
+
+## Recent releases
+
+The updates below show a simple pattern you can reuse for production documentation. Each entry groups changes by type so readers can quickly find new features, bug fixes, and compatibility notes.
+
+<Update label="2026-11-04" description="v1.4.0" tags={["feature", "improvement"]}>
+
+## New Features
+
+- Added a timeline view for recent thread activity so you can review changes without leaving the page.
+- Added a compact release summary panel for quick scanning on smaller screens.
+
+## Improvements
+
+- Reduced visual noise in release notes by grouping related changes under clear headings.
+- Improved loading states when you open a changelog entry with multiple sections.
+
+## Upgrade Notes
+
+- No migration is required.
+- If you publish changelog entries from a CMS, verify that date formatting stays consistent across releases.
+
+</Update>
+
+<Update label="2026-10-18" description="v1.3.2" tags={["bugfix", "improvement"]}>
+
+## Bug Fixes
+
+- Fixed a layout issue that caused long release titles to wrap awkwardly in narrow containers.
+- Fixed a scrolling bug that could hide the bottom of an entry when you jump between sections.
+
+## Improvements
+
+- Improved keyboard navigation for opening and closing release details.
+- Updated spacing so bullet lists remain readable in both dense and expanded layouts.
+
+</Update>
+
+<Update label="2026-09-30" description="v1.3.0" tags={["feature", "breaking"]}>
+
+## New Features
+
+- Added support for release tags so you can categorize entries by feature, bug fix, or behavior change.
+- Added structured sections for upgrade guidance and compatibility notes.
+
+## Behavior Changes
+
+- Release entries now emphasize the most recent version first.
+- Summary text should be written as plain language instead of marketing copy.
+
+## Upgrade Notes
+
+- Review older entries after you migrate to the new format.
+- Update any internal links that point to renamed release sections.
+
+</Update>
+
+## Release workflow
+
+Use a repeatable process so each release note stays consistent. This helps your team publish updates quickly and makes the page easier to maintain over time.
+
+<Steps>
+  <Step title="Write the summary" icon="book-open">
+    Start with one sentence that explains what changed. Keep it concrete and avoid vague language.
+  </Step>
+  <Step title="Group the changes" icon="settings">
+    Split the release into sections such as New Features, Improvements, Bug Fixes, and Upgrade Notes.
+  </Step>
+  <Step title="Verify the date" icon="check-circle">
+    Use an ISO date like `2026-11-04` so releases sort correctly and remain easy to compare.
+  </Step>
+  <Step title="Publish and review" icon="rocket">
+    After publishing, scan the entry on desktop and mobile to confirm that headings, spacing, and lists render cleanly.
+  </Step>
+</Steps>
+
+## How to structure entries
+
+Use the same release format every time so readers know where to look. The examples below show how you can adapt the page for your own product without changing the overall layout.
+
+<Tabs>
+  <Tab title="Feature release" icon="zap">
+
+    ```markdown
+    ## New Features
+
+    - Added support for release tags.
+    - Added a compact summary view.
+
+    ## Improvements
+
+    - Reduced visual clutter.
+    - Improved entry navigation.
+    ```
+
+  </Tab>
+  <Tab title="Bug fix release" icon="shield">
+
+    ```markdown
+    ## Bug Fixes
+
+    - Fixed spacing on narrow screens.
+    - Fixed jump links in long entries.
+
+    ## Upgrade Notes
+
+    - No action required.
+    ```
+
+  </Tab>
+  <Tab title="Behavior change" icon="alert-triangle">
+
+    ```markdown
+    ## Behavior Changes
+
+    - Recent releases now appear first.
+    - Long notes collapse by default.
+
+    ## Upgrade Notes
+
+    - Review any saved links to old section anchors.
+    ```
+
+  </Tab>
+</Tabs>
+
+## Example release note data
+
+If you store changelog content in a CMS or repository, keep the data model simple. The example below uses a format that is easy to generate from automation or hand-edit in markdown.
+
+<CodeGroup tabs="JSON,Markdown" show-lines={true}>
+  ```json
+  {
+    "label": "2026-11-04",
+    "description": "v1.4.0",
+    "tags": ["feature", "improvement"],
+    "sections": [
+      "New Features",
+      "Improvements",
+      "Upgrade Notes"
+    ]
+  }
+  ```
+
+  ```markdown
+  <Update label="2026-11-04" description="v1.4.0" tags={["feature", "improvement"]}>
+  
+  ## New Features
+  
+  - Added a timeline view for recent thread activity.
+  
+  ## Improvements
+  
+  - Improved loading states for long entries.
+  
+  ## Upgrade Notes
+  
+  - No migration is required.
+  
+  </Update>
+  ```
+</CodeGroup>
+
+## What to include in each release
+
+Use the checklist below to keep your updates useful and consistent.
+
+| Topic | What to write |
+|------|---------------|
+| Recent releases | The latest version numbers and dates |
+| New features | New capabilities users can try right away |
+| Bug fixes | Problems that were corrected in the current release |
+| Behavior changes | Changes in defaults, ordering, or interaction patterns |
+| Upgrade notes | Any action users should take after updating |
+
+<Expandable title="Style guidance for release notes" default-open="false">
+  
+Write in active voice and keep each bullet specific. Avoid hype, avoid vague claims, and mention user impact when it matters.
+
+Good example:
+
+- Reduced page load time on the changelog view.
+- Fixed a broken anchor link for older releases.
+
+Less useful example:
+
+- Improved everything.
+- Made the product better.
+
+</Expandable>
+
+## Maintenance notes
+
+Keep this page current by adding new `Update` entries at the top and archiving older releases below. When you update the structure, preserve the same headings so readers can compare versions easily.
+
+<Callout kind="info">
+  This is a starter kit template. Replace the sample release notes with your real product history, and keep the content factual, date-based, and easy to scan.
+</Callout>

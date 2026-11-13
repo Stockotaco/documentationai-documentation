@@ -1,0 +1,186 @@
+---
+title: Quickstart
+description: Get Bridge running locally and create your first thread in a few minutes. This guide covers setup, first launch, and the fastest path to sending work to pi.
+---
+
+## Overview
+
+Bridge is a local web UI for the pi coding agent. You run it on your machine, open a browser, and manage threads without leaving your projects behind.
+
+This quickstart shows you how to install Bridge, launch it locally, create your first thread, and send a message to a running thread.
+
+<Callout kind="info">
+
+Bridge is a starter kit template. Adapt the commands, paths, and defaults to match your own installation and environment.
+
+</Callout>
+
+## Before you begin
+
+You need a working pi installation, a recent Node.js runtime, and access to your project folder. If you already run pi in your terminal, you are close.
+
+<Columns cols={2}>
+  <Card title="Pi installed" icon="terminal" href="#installation">
+    Confirm that `pi` is available in your shell before you start.
+  </Card>
+  <Card title="A project folder" icon="book-open" href="#basic-project-organization">
+    Use a real codebase so each thread has a clear place to work.
+  </Card>
+  <Card title="Node.js runtime" icon="package" href="#installation">
+    Install the app and launch the local server from your machine.
+  </Card>
+  <Card title="Browser access" icon="monitor" href="#launching-bridge-locally">
+    Open Bridge in your browser after the local server starts.
+  </Card>
+</Columns>
+
+## Installation
+
+Install Bridge from your project directory, then start the local UI. The exact package name may vary in your setup, so treat this as the standard local workflow.
+
+<Steps>
+  <Step title="Install dependencies" icon="download">
+    Run the install step from the repository root.
+
+    ````bash
+    npm install
+    ````
+  </Step>
+  <Step title="Start Bridge" icon="play-circle">
+    Launch the local app server.
+
+    ````bash
+    npm run dev
+    ````
+  </Step>
+  <Step title="Open the UI" icon="monitor">
+    Visit the local address printed in your terminal, then keep that tab open while you work.
+  </Step>
+</Steps>
+
+<CodeGroup tabs="npm,pnpm,bash">
+  ```bash
+  npm install
+  npm run dev
+  ```
+
+  ```bash
+  pnpm install
+  pnpm dev
+  ```
+
+  ```bash
+  ./scripts/start-bridge.sh
+  ```
+</CodeGroup>
+
+## Launching Bridge locally
+
+After the server starts, open the local URL in your browser. The home view should load your projects and show the available thread controls.
+
+<Tabs>
+  <Tab title="macOS" icon="apple">
+    Open the printed local address in Safari, Chrome, or your preferred browser.
+
+    ```bash
+    open http://localhost:3000
+    ```
+  </Tab>
+  <Tab title="Windows" icon="monitor">
+    Open the printed local address in your browser from PowerShell or the address bar.
+
+    ```powershell
+    Start-Process "http://localhost:3000"
+    ```
+  </Tab>
+  <Tab title="Linux" icon="terminal">
+    Open the local address from your desktop environment or terminal.
+
+    ```bash
+    xdg-open http://localhost:3000
+    ```
+  </Tab>
+</Tabs>
+
+## Create your first thread
+
+A thread is one pi process managed by Bridge. Start with a single thread in a familiar project so you can verify that Bridge connects cleanly.
+
+<Steps>
+  <Step title="Choose a project" icon="folder">
+    Select the repository you want pi to work in. Start with a small, active codebase so you can see changes quickly.
+  </Step>
+  <Step title="Create a thread" icon="plus">
+    Create a new thread from the project view. Bridge should assign it to the selected folder and show it in the thread list.
+  </Step>
+  <Step title="Set the task" icon="message-square">
+    Give the thread a clear instruction, such as a doc update, a test fix, or a small refactor.
+  </Step>
+</Steps>
+
+## Send a message to a running thread
+
+Once the thread is active, you can send a follow-up message while it is still running. Bridge either steers the current work or queues your message until the agent is ready.
+
+<Callout kind="tip">
+
+Keep messages short and specific. You get the best results when you ask for one outcome at a time.
+
+</Callout>
+
+```json
+{
+  "thread": "docs-refresh",
+  "message": "Update the README with the new setup steps and keep the tone concise."
+}
+```
+
+```bash
+bridge thread message docs-refresh "Add a short troubleshooting note for local startup errors."
+```
+
+## Basic project organization
+
+Bridge works best when you group threads by project folder. That makes it easier to find work, review progress, and hand tasks between threads.
+
+| Practice | Why it helps |
+|----------|--------------|
+| One project per folder | Threads stay focused on a single codebase. |
+| Short task names | You can scan active work quickly. |
+| Separate exploratory threads | You can test ideas without disturbing the main path. |
+| Reuse the same folder grouping | You build a predictable workspace over time. |
+
+<Board title="Example starter workflow">
+  <BoardColumn title="To do" color="0" icon="circle-dot">
+    <BoardCard title="Install Bridge" description="Set up the local app and verify that it starts." />
+    <BoardCard title="Open the project" description="Pick the repository where your first thread will run." />
+  </BoardColumn>
+  <BoardColumn title="In progress" color="1" icon="loader">
+    <BoardCard title="Create first thread" description="Start a thread and assign a small task." />
+  </BoardColumn>
+  <BoardColumn title="Done" color="2" icon="check-circle">
+    <BoardCard title="Send a follow-up message" description="Confirm that Bridge can steer a running thread." />
+  </BoardColumn>
+</Board>
+
+## Common next steps
+
+After your first thread works, try a second project, split a larger task into child threads, or keep one pinned thread as your main point of contact.
+
+<Expandable title="What should I try next?" default-open="false">
+  
+You can start with a documentation update, a small bug fix, or a repository scan. Choose work that is easy to verify so you can learn how the thread flow feels.
+
+</Expandable>
+
+<Expandable title="How do I know Bridge is working?" default-open="false">
+  
+You should see the local UI load, a thread appear in the list, and a visible response after you send a message.
+
+</Expandable>
+
+<Callout kind="success">
+
+If the page loads and your thread responds, you are ready to use Bridge as your local control center for pi.
+
+</Callout>

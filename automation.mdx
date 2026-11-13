@@ -1,0 +1,182 @@
+---
+title: Automations and Runs
+description: Set up scheduled prompts and multi-step workflows in Bridge. This page covers recurring tasks, run limits, and tracking progress through complex agent work.
+---
+
+## Overview
+
+Bridge automations let you schedule prompts, repeat routine work, and track progress across multi-step agent runs. You use them when a task needs to happen again and again, or when one prompt needs to fan out into several coordinated steps.
+
+This starter kit shows a generic pattern you can adapt to your own workflows. Replace the sample project names, schedules, and prompts with the tasks your team actually runs.
+
+<Callout kind="info">
+
+Automations work best when each run has a clear goal, a bounded scope, and a short review loop. If a task can finish in one pass, keep it simple.
+
+</Callout>
+
+## Common automation patterns
+
+<Columns cols={3}>
+  <Card title="Scheduled prompts" icon="calendar" href="#scheduled-prompts">
+    Trigger a prompt on a fixed cadence, such as daily or weekly.
+  </Card>
+  <Card title="Recurring automations" icon="refresh-cw" href="#recurring-automations">
+    Repeat the same workflow with fresh context each time.
+  </Card>
+  <Card title="Multi-step runs" icon="git-branch" href="#multi-step-runs">
+    Break larger work into smaller steps with checkpoints.
+  </Card>
+</Columns>
+
+### What to automate
+
+Use automations for tasks that are repetitive, time-based, or easy to verify. Common examples include inbox triage, dependency checks, release notes drafts, and weekly project summaries.
+
+| Use case | Why it fits automation |
+|----------|------------------------|
+| Daily review | The same prompt runs at the same time each day |
+| Dependency check | You want consistent output and a repeatable format |
+| Draft generation | A first pass is enough for a human to edit |
+| Status summaries | Progress can be gathered from prior outputs |
+
+## Scheduled prompts
+
+A scheduled prompt starts a run at a specific time or on a recurring schedule. Use it when you want Bridge to check for work without waiting for a manual trigger.
+
+<Steps>
+  <Step title="Define the trigger" icon="calendar">
+    Choose when the automation should run. For example, you might start every weekday at 9:00 AM, or every Friday afternoon before standup.
+  </Step>
+  <Step title="Write the prompt" icon="edit-3">
+    Keep the prompt short and task-focused. Mention the source of truth, the expected output, and any constraints on the response.
+  </Step>
+  <Step title="Choose the output destination" icon="inbox">
+    Decide whether the result should stay in Bridge, post to a channel, or create a draft for review.
+  </Step>
+  <Step title="Review the first run" icon="check-circle">
+    Confirm that the result is useful, then adjust the prompt or timing if needed.
+  </Step>
+</Steps>
+
+## Recurring automations
+
+Recurring automations reuse the same workflow with new inputs each time. They are useful when the structure stays the same but the underlying work changes, such as a weekly dependency audit or a daily triage pass.
+
+<CodeGroup tabs="YAML,JSON">
+  ```yaml
+name: Weekly dependency check
+schedule: "0 10 * * 1"
+prompt: >
+  Review the current project dependencies and report any updates,
+  security concerns, or version conflicts that need attention.
+maxRunMinutes: 20
+notifyOnCompletion: true
+  ```
+
+  ```json
+{
+  "name": "Weekly dependency check",
+  "schedule": "0 10 * * 1",
+  "prompt": "Review the current project dependencies and report any updates, security concerns, or version conflicts that need attention.",
+  "maxRunMinutes": 20,
+  "notifyOnCompletion": true
+}
+  ```
+</CodeGroup>
+
+A good recurring automation has a stable title, a clear schedule, and a narrow deliverable. If the task regularly changes shape, split it into smaller automations so each one stays easy to review.
+
+## Multi-step runs
+
+Some tasks need more than one pass. In those cases, structure the workflow as a sequence of steps and keep each step small enough to validate on its own.
+
+<Tabs>
+  <Tab title="Planning" icon="clipboard-list">
+    Use the first step to collect context, identify the goal, and decide what evidence the next step needs.
+  </Tab>
+  <Tab title="Execution" icon="play-circle">
+    Use later steps to do the work, check the result, and produce a summary that a person can verify.
+  </Tab>
+  <Tab title="Review" icon="search">
+    Use the last step to compare the output against the goal and mark anything that still needs manual attention.
+  </Tab>
+</Tabs>
+
+### Example workflow
+
+1. Gather the latest project context.
+2. Draft the response or change set.
+3. Verify the output against the task goal.
+4. Send the result for human review.
+
+<Callout kind="tip">
+
+If a step depends on a prior answer, write that dependency into the prompt explicitly. Do not assume the agent will infer the missing context.
+
+</Callout>
+
+## Run limits and extensions
+
+Run limits protect you from long, open-ended work. Set a default limit for the whole workflow, then extend only when the next step has a clear reason to continue.
+
+| Setting | What it controls | Good practice |
+|---------|-------------------|---------------|
+| Run limit | Maximum time or effort for one run | Start small and increase only when needed |
+| Extension | Extra time for a task that is still productive | Use it after a checkpoint, not automatically |
+| Retry | A fresh attempt after a failed run | Retry only after you fix the prompt or inputs |
+
+When a run reaches its limit, pause and decide whether you need more context, a narrower scope, or a follow-up task. That keeps the workflow predictable and makes failures easier to diagnose.
+
+## Monitoring steps and outputs
+
+You should watch both the intermediate steps and the final output. Intermediate steps help you spot drift early, while the final output tells you whether the run actually solved the task.
+
+<Expandable title="What to check during a run" default-open="false">
+
+- Did the run start with the right context?
+- Did each step produce a useful intermediate result?
+- Did the output stay inside the requested scope?
+- Did the run complete within the expected limit?
+- Is the final result ready to send, or does it need review?
+
+</Expandable>
+
+<Expandable title="How to make runs easier to review" default-open="false">
+
+- Use short, descriptive step names.
+- Ask for structured output when possible.
+- Keep one task per run when the work is risky.
+- Save outputs in a consistent format so you can compare runs over time.
+
+</Expandable>
+
+## Example setup
+
+<Steps>
+  <Step title="Create the schedule" icon="calendar">
+    Pick a cadence that matches the work, such as every morning, every Monday, or the first business day of the month.
+  </Step>
+  <Step title="Write the automation prompt" icon="file-text">
+    State the goal, the expected output, and any boundaries. For example, ask for a concise summary with no extra commentary.
+  </Step>
+  <Step title="Set a run limit" icon="timer">
+    Give the workflow enough time to finish, but keep the limit tight enough that stalled work does not linger.
+  </Step>
+  <Step title="Monitor results" icon="activity">
+    Review the first few runs, then adjust the schedule, the prompt, or the extension policy if the output is not reliable.
+  </Step>
+</Steps>
+
+## Next steps
+
+After you have one automation working, expand carefully. Add another recurring task, split a large workflow into smaller runs, or introduce a review step before the output reaches your team.
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="book-open" href="/quickstart" horizontal>
+    Learn the basic Bridge setup before you build more advanced workflows.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication" horizontal>
+    Review how access and login settings affect agent runs.
+  </Card>
+</Columns>

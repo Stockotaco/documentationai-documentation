@@ -1,0 +1,209 @@
+---
+title: Threads and Conversations
+description: Learn how Bridge handles long-running threads, comments, and subthreads. This guide explains how to steer work in progress without losing context.
+---
+
+## Overview
+
+Bridge helps you manage long-running work as a set of threads. Each thread can keep moving, pause for review, accept new direction, or branch into a subthread without losing the original context.
+
+Use this model when you want to coordinate agent work over time instead of treating every request as a one-off prompt. It works best when tasks are related, need review, or may spawn follow-up work.
+
+<Callout kind="info">
+
+This page is a starter kit template. Adapt the examples and labels to match your own product language and workflow.
+
+</Callout>
+
+## Core ideas
+
+<Columns cols={2}>
+  <Card title="Thread lifecycle" icon="arrow-right" href="#thread-lifecycle">
+    Understand how a thread starts, runs, pauses, and continues.
+  </Card>
+  <Card title="Steering messages" icon="settings" href="#steering-versus-queueing">
+    Learn when a message changes the current run and when it waits.
+  </Card>
+  <Card title="Comments" icon="message-circle" href="#comments-on-replies">
+    Annotate a reply without interrupting the whole conversation.
+  </Card>
+  <Card title="Subthreads" icon="git-branch" href="#branching-subthreads">
+    Split off alternative paths while keeping the original thread intact.
+  </Card>
+</Columns>
+
+## Thread lifecycle
+
+A thread usually follows a simple pattern: it starts with a task, runs until it needs more input, and then continues with your next message. In practice, that means you can keep a thread open while the agent works through a larger job.
+
+You can think of the lifecycle as a loop. The thread receives context, produces output, and then waits for the next action. That action may be a steering message, a queued follow-up, or a branch into a new subthread.
+
+<Steps>
+  <Step title="Start the thread" icon="play-circle">
+    Begin with a clear goal and enough context for the agent to make progress.
+
+    ````bash
+    bridge thread start "Review the release notes and draft a summary"
+    ````
+  </Step>
+  <Step title="Let it run" icon="loader">
+    The thread works through the task and returns progress as it goes.
+  </Step>
+  <Step title="Review the result" icon="check-circle">
+    Read the reply, inspect the changes, and decide whether to steer, queue, or branch.
+  </Step>
+  <Step title="Continue work" icon="arrow-right">
+    Send another message to refine the same thread or split the work into a subthread.
+  </Step>
+</Steps>
+
+## Steering versus queueing
+
+Sometimes you want your message to change what the agent is doing right now. Other times you want it to wait until the current action finishes. Bridge treats those cases differently so you can stay in control without interrupting useful work.
+
+Use steering when the new instruction should affect the current run immediately. Use queueing when you want the thread to finish its current step first and then process your follow-up.
+
+<Tabs>
+  <Tab title="Steer now" icon="zap">
+
+    Send a message that changes the current direction.
+
+    ````bash
+    bridge thread send 42 "Focus on the database schema instead of the API layer"
+    ````
+
+    Use this when the agent is still actively working and you want a correction right away.
+
+  </Tab>
+  <Tab title="Queue next" icon="clock">
+
+    Add a message that the thread should handle after its current work completes.
+
+    ````bash
+    bridge thread queue 42 "After that, add tests for the migration"
+    ````
+
+    Use this when the current task is still valid and the next step should happen afterward.
+
+  </Tab>
+</Tabs>
+
+<Callout kind="tip">
+
+If a task is already producing useful output, queue the next instruction. If the current direction is wrong, steer it immediately.
+
+</Callout>
+
+## Comments on replies
+
+Comments let you react to a specific part of a reply instead of changing the whole thread. This is useful when you want to ask for clarification, approve a section, or request a small revision.
+
+A good comment is specific. Refer to the exact paragraph, claim, or code block you want adjusted. That keeps the discussion focused and reduces unnecessary rework.
+
+````javascript
+const threadReply = {
+  id: 42,
+  author: "Bridge",
+  text: "The migration is ready, but the rollback plan needs more detail.",
+  comments: [
+    {
+      author: "You",
+      text: "Please add a note about restoring the previous schema snapshot."
+    }
+  ]
+};
+
+console.log(threadReply);
+````
+
+## Branching subthreads
+
+When you want to try a different approach, branch a subthread instead of overwriting the current path. The original thread stays as a record of what happened, while the new branch can explore an alternative.
+
+This pattern is especially useful for implementation options, review revisions, and experiments. You can compare outcomes side by side and keep the decision trail intact.
+
+<CodeGroup tabs="CLI,JavaScript">
+  ````bash
+  bridge thread branch 42 "Try a simpler retry strategy"
+  ````
+
+  ````javascript
+  await bridge.threads.branch({
+    threadId: 42,
+    message: "Try a simpler retry strategy"
+  });
+  ````
+</CodeGroup>
+
+<Expandable title="When to branch" default-open="false">
+
+Use a subthread when you want to explore a different answer, isolate a risky change, or continue after a reply with a new direction.
+
+</Expandable>
+
+<Expandable title="When to stay in the same thread" default-open="false">
+
+Stay in the same thread when you are refining the same task, correcting a small detail, or waiting for the next pass of the same work.
+
+</Expandable>
+
+## Grouping threads by project
+
+You can group threads by project folder so related work stays together. This makes it easier to switch between tasks, review history, and understand which thread belongs to which codebase or workspace.
+
+A practical setup is to keep one group per project and then use thread names that describe the current objective. For example, you might keep one group for releases, another for bug fixes, and another for experiments.
+
+| Grouping strategy | Best for | Result |
+| ----------------- | -------- | ------ |
+| One group per project | Ongoing development | Easier navigation and shared context |
+| One group per release | Shipping work | Clear focus on a specific milestone |
+| One group per investigation | Debugging | Separate evidence from implementation |
+| One group per experiment | Comparative work | Cleaner branching and review |
+
+## Example workflow
+
+Use this sequence when you want a thread to move from planning to execution without losing context.
+
+<Steps>
+  <Step title="Create a project thread" icon="folder">
+    Start with a task that belongs to a single project folder.
+  </Step>
+  <Step title="Let the agent work" icon="settings">
+    Allow the thread to produce a first pass before you intervene.
+  </Step>
+  <Step title="Add a comment" icon="message-circle">
+    Comment on the reply when you only need a local correction.
+  </Step>
+  <Step title="Branch a subthread" icon="git-branch">
+    Fork the work if you want to test another approach.
+  </Step>
+  <Step title="Queue follow-up work" icon="clock">
+    Add the next task once the current run is complete.
+  </Step>
+</Steps>
+
+## Practical tips
+
+<Columns cols={3}>
+  <Card title="Be specific" icon="target" href="#overview">
+    State what you want changed, not just that something is wrong.
+  </Card>
+  <Card title="Preserve context" icon="shield" href="#thread-lifecycle">
+    Keep related work in the same thread until you need a branch.
+  </Card>
+  <Card title="Review before branching" icon="git-branch" href="#branching-subthreads">
+    Check whether a comment is enough before creating a new path.
+  </Card>
+</Columns>
+
+<Callout kind="alert">
+
+Avoid flooding a thread with unrelated instructions. A small, focused message usually produces better results than a long list of changes.
+
+</Callout>
+
+## Summary
+
+Threads give you a way to manage agent work as an ongoing conversation. You can steer active work, queue follow-ups, comment on specific replies, branch subthreads when needed, and group related threads by project.
+
+Use the simplest control that fits the moment. That keeps the workflow readable and makes it easier to revisit decisions later.

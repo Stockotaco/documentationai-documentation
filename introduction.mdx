@@ -1,0 +1,64 @@
+---
+title: Bridge Documentation
+description: An overview of Bridge, the local web UI for the pi coding agent. Learn what it is, who it is for, and how it organizes concurrent agent threads.
+---
+
+<Image src="https://blob-cdn.documentation.ai/org-2ebb2ef5-dd91-493f-9938-283fbdb14c81/doc-d2a73d2e-4391-4446-a5c8-2d0b41b7c4c1/1774416373576-61fes65kpt8-Image-6.png?q=85&fm=auto&auto=compress%2Cformat" alt="Bridge documentation" width="800" height="400" />
+
+## Welcome
+
+Bridge is a local web UI for the pi coding agent. You use it to run several agent threads side by side, keep work organized by project, and move between tasks without losing context. It is a starter kit page, so you can adapt the wording, structure, and links to match your own product.
+
+<Callout kind="info">
+  This page is a visual overview. Use it as a simple landing page for newcomers, then expand it with your product-specific setup, workflows, and terminology.
+</Callout>
+
+## What Bridge helps you do
+
+<Columns cols={2}>
+  <Card title="One window" icon="monitor" href="/quickstart">
+    Put your most-used agent work in one place and keep it easy to scan.
+  </Card>
+  <Card title="Concurrent threads" icon="zap" href="/authentication">
+    Run multiple threads at once and switch between them as work changes.
+  </Card>
+  <Card title="Shared setup" icon="settings" href="/quickstart">
+    Keep the same tools, logins, and model access available across machines.
+  </Card>
+  <Card title="Team workflow" icon="users" href="/changelog">
+    Coordinate review, handoff, and follow-up work without leaving the UI.
+  </Card>
+</Columns>
+
+## How the thread model works
+
+Bridge organizes work around threads. Each thread behaves like its own agent session, so you can keep parallel tasks separated while still managing them from one interface. That makes it easier for you to review progress, steer a task mid-run, or branch into a new path when a different approach is worth trying.
+
+The model is useful when you want clear ownership for each task, predictable context, and a visible history of what happened next. It also supports a shared loadout, so the same core capabilities are available wherever you open the tool.
+
+<Columns cols={3}>
+  <Card title="Threads" icon="code" href="#what-bridge-helps-you-do">
+    Track each task as a separate unit of work.
+  </Card>
+  <Card title="Subthreads" icon="arrow-right" href="#what-bridge-helps-you-do">
+    Branch follow-up work when you need a different path.
+  </Card>
+  <Card title="Shared loadout" icon="shield" href="#what-bridge-helps-you-do">
+    Reuse the same setup across environments.
+  </Card>
+</Columns>
+
+## Explore the core docs
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="book-open" href="/quickstart" horizontal>
+    Learn the fastest path to your first working setup.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication" horizontal>
+    Review how access, logins, and credentials are handled.
+  </Card>
+</Columns>
+
+<Callout kind="tip">
+  Keep this page short and practical. Link outward to the pages that explain setup, security, and daily use in more detail.
+</Callout>

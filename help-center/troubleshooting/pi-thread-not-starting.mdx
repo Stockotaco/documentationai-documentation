@@ -1,0 +1,30 @@
+---
+title: Pi Thread Not Starting
+description: Resolve issues when a pi thread fails to launch.
+---
+
+## Symptoms
+
+- Thread status stays at "pending"
+- No output logs generated
+
+## Possible Causes
+
+- Insufficient compute quota
+- Dataset not available
+
+## Quick Fix
+
+<Steps>
+  <Step title="Check Quota">
+    ````bash
+    curl -H "Authorization: Bearer YOUR_API_KEY" https://api.mythicdata.com/bridge/quota
+    ````
+  </Step>
+  <Step title="Verify Dataset">
+    Ensure dataset exists in your workspace.
+  </Step>
+  <Step title="Restart Thread">
+    Retry from Bridge console if resources are free.
+  </Step>
+</Steps>

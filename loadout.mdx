@@ -1,0 +1,251 @@
+---
+title: Loadout and Workspace Setup
+description: Configure the shared tools, agents, prompts, extensions, and context that power Bridge across projects and machines. Use this page to understand how per-project and per-thread overrides work.
+---
+
+## Overview
+
+Bridge uses a loadout to define the tools, agents, prompts, extensions, models, and context that each thread can see. You can keep the setup consistent across projects, then override only the pieces that need to differ per workspace or per thread.
+
+This page is a starter kit template. Adapt the examples to match your own repository layout, naming, and runtime conventions.
+
+<Callout kind="info">
+Use a shared baseline for repeatable behavior, then layer project-specific and thread-specific overrides on top.
+</Callout>
+
+## What belongs in a loadout
+
+A loadout typically includes the parts that shape how work gets done:
+
+- Skills that teach the agent domain-specific actions
+- Extensions that expose extra capabilities
+- Agent definitions and prompt templates
+- MCP servers and model choices
+- Context files, instructions, and memory notes
+- History and restoration settings for resuming work safely
+
+<Columns cols={2}>
+  <Card title="Skills and Extensions" icon="book-open" href="#skills-and-extensions">
+    Package repeatable know-how and extra capabilities for every thread.
+  </Card>
+  <Card title="Agents and Prompts" icon="users" href="#agents-and-prompts">
+    Define specialized behavior for review, implementation, triage, or research.
+  </Card>
+  <Card title="MCP Servers and Models" icon="database" href="#mcp-servers-and-models">
+    Choose the external tools and model settings available to each thread.
+  </Card>
+  <Card title="Overrides and History" icon="settings" href="#per-project-and-per-thread-overrides">
+    Control inheritance, restoration, and safe local customization.
+  </Card>
+</Columns>
+
+## Setup workflow
+
+<Steps>
+  <Step title="Define a shared baseline" icon="settings">
+    Create the default tools, prompts, and model choices that you want every project to inherit.
+  </Step>
+  <Step title="Add project-specific files" icon="folder">
+    Store repository-level instructions beside the code so the loadout stays versioned with the project.
+  </Step>
+  <Step title="Override thread behavior" icon="chevron-right">
+    Adjust one thread when it needs a different agent, model, or context window.
+  </Step>
+  <Step title="Test restoration" icon="rotate-ccw">
+    Restart a thread and confirm that it reloads the same settings, history, and attachments.
+  </Step>
+</Steps>
+
+## Skills and extensions
+
+Skills are repeatable procedures or domain rules that help the agent work consistently. Extensions add capabilities such as file access, browser tooling, or repository-specific helpers. Keep both small and focused so threads can combine them as needed.
+
+A good pattern is to separate global capability from project context. For example, a design system repository might share one visual-testing skill, while a backend service might share a database inspection extension.
+
+<CodeGroup tabs="YAML,JSON">
+  ```yaml
+  skills:
+    - name: code-review
+      path: ./skills/code-review.md
+    - name: release-notes
+      path: ./skills/release-notes.md
+
+  extensions:
+    - name: repo-tools
+      enabled: true
+    - name: browser
+      enabled: true
+  ```
+
+  ```json
+  {
+    "skills": [
+      { "name": "code-review", "path": "./skills/code-review.md" },
+      { "name": "release-notes", "path": "./skills/release-notes.md" }
+    ],
+    "extensions": [
+      { "name": "repo-tools", "enabled": true },
+      { "name": "browser", "enabled": true }
+    ]
+  }
+  ```
+</CodeGroup>
+
+### Practical guidance
+
+- Keep skill names short and descriptive.
+- Prefer one responsibility per skill file.
+- Enable only the extensions a thread actually needs.
+- Version skill content with the repository when behavior must be reproducible.
+
+## Agents and prompts
+
+Agents let you split work across different roles. One agent can draft, another can review, and a third can validate. Prompts define how each role should behave, what output style to use, and what constraints matter most.
+
+Use a small set of stable agents first. Add more only when they solve a real workflow problem.
+
+<Tabs>
+  <Tab title="Implementation Agent" icon="code">
+    The implementation agent should focus on changing files, running checks, and explaining what it changed.
+
+    ```text
+    You are responsible for making the requested code changes.
+    Prefer the smallest safe edit.
+    Keep notes brief and specific.
+    ```
+  </Tab>
+  <Tab title="Review Agent" icon="check-circle">
+    The review agent should look for correctness, maintainability, and missing edge cases.
+
+    ```text
+    You are responsible for reviewing the change set.
+    Identify risks, regressions, and untested assumptions.
+    Prefer concrete feedback over general advice.
+    ```
+  </Tab>
+  <Tab title="Triage Agent" icon="help-circle">
+    The triage agent should classify requests, gather context, and route work to the right specialist.
+
+    ```text
+    You are responsible for understanding the request.
+    Summarize the goal, relevant files, and next action.
+    Ask one clarifying question only if needed.
+    ```
+  </Tab>
+</Tabs>
+
+<Callout kind="tip">
+Name prompts by role, not by person. That keeps them reusable across projects and teams.
+</Callout>
+
+## MCP servers and models
+
+Model choice affects speed, cost, and depth of reasoning. MCP servers extend what a thread can inspect or automate. A loadout should define the default combination, then allow a project to narrow or expand it.
+
+Use the same model for most threads when you want consistent behavior. Use a stronger model only for tasks that need more planning or higher confidence.
+
+| Setting | Recommended approach |
+| --- | --- |
+| Default model | Use the model that balances quality and latency for routine work. |
+| Review model | Use a stricter model for validation and edge cases. |
+| MCP servers | Enable only the servers required by the project. |
+| Network access | Keep it explicit so you can audit what a thread can reach. |
+
+### Example configuration
+
+```yaml
+models:
+  default: pi-small
+  review: pi-large
+
+mcpServers:
+  filesystem:
+    enabled: true
+  git:
+    enabled: true
+  browser:
+    enabled: false
+```
+
+## Per-project and per-thread overrides
+
+Per-project overrides apply to everything in a repository. Per-thread overrides apply only to one active thread. That separation helps you keep the shared setup stable while still giving each thread room to adapt.
+
+Use project overrides for conventions that should travel with the codebase. Use thread overrides for temporary experiments, investigations, or one-off debugging sessions.
+
+### Suggested precedence
+
+1. Global defaults
+2. Project loadout
+3. Thread override
+4. Manual session changes
+
+```mermaid
+graph LR
+    A[Global defaults] --> B[Project loadout]
+    B --> C[Thread override]
+    C --> D[Active thread]
+```
+
+### Example override pattern
+
+```yaml
+project:
+  agent: implementation
+  model: pi-small
+  extensions:
+    - repo-tools
+    - browser
+
+thread:
+  agent: review
+  model: pi-large
+  context:
+    focus: "checkout flow"
+```
+
+## History and restoration
+
+Bridge should preserve enough history for you to resume work without rebuilding context from scratch. Store thread history, active agent state, and the current workspace mapping so a restart can restore the same place in the process.
+
+That makes restoration predictable after a browser refresh, machine restart, or process crash.
+
+<Expandable title="What to restore first" default-open="true">
+  
+Restore the thread identity, active model, current prompt, and any open worktree before you restore optional UI state.
+
+</Expandable>
+
+<Expandable title="What to restore later" default-open="false">
+  
+Restore ephemeral view state, collapsed panels, and temporary filters after the core session is healthy.
+
+</Expandable>
+
+## Example workspace layout
+
+The following layout keeps shared files separate from project files while still making overrides easy to find.
+
+```text
+bridge/
+  loadout/
+    defaults.yaml
+    agents/
+      implementation.md
+      review.md
+    skills/
+      code-review.md
+      release-notes.md
+  projects/
+    acme-web/
+      project.loadout.yaml
+      thread.overrides/
+```
+
+## Putting it all together
+
+A reliable loadout gives each thread the same core tools while still allowing local variation. Start with a shared baseline, keep project rules close to the code, and reserve per-thread overrides for cases where the work truly needs them.
+
+<Callout kind="success">
+If you can restart a thread and continue with the same tools, prompts, and context, your loadout is doing its job.
+</Callout>

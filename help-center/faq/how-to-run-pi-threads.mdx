@@ -1,0 +1,23 @@
+---
+title: How do I run pi threads?
+description: Learn how to launch pi threads with Bridge.
+---
+
+## Overview
+
+Bridge lets you run multiple pi (parallel inference) threads at once.
+
+## Start Pi Threads
+
+1. Open the Bridge console.
+2. Select “New Pi Thread”.
+3. Choose dataset and configuration.
+4. Click "Start". Threads appear in the dashboard.
+
+## API Launch Example
+
+```bash
+curl -X POST https://api.mythicdata.com/bridge/pi-thread \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"count":2,"dataset":"demo"}'
+```
